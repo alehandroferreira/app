@@ -43,4 +43,86 @@ describe("Category Unit Tests", () => {
       expect(category.created_at).toBeInstanceOf(Date);
     });
   });
+
+  describe("Create Command", () => {
+    test("should create a category", () => {
+      const category = Category.create({
+        name: "Movie",
+      });
+
+      expect(category.category_id).toBeUndefined();
+      expect(category.name).toEqual("Movie");
+      expect(category.description).toBeNull();
+      expect(category.is_active).toBeTruthy();
+      expect(category.created_at).toBeInstanceOf(Date);
+    });
+
+    test("should create a category with description", () => {
+      const category = Category.create({
+        name: "Movie",
+        description: "Movie description",
+      });
+
+      expect(category.category_id).toBeUndefined();
+      expect(category.name).toEqual("Movie");
+      expect(category.description).toEqual("Movie description");
+      expect(category.is_active).toBeTruthy();
+      expect(category.created_at).toBeInstanceOf(Date);
+    });
+
+    test("should create a category with is_active", () => {
+      const category = Category.create({
+        name: "Movie",
+        is_active: false,
+      });
+
+      expect(category.category_id).toBeUndefined();
+      expect(category.name).toEqual("Movie");
+      expect(category.description).toBeNull();
+      expect(category.is_active).toBeFalsy();
+      expect(category.created_at).toBeInstanceOf(Date);
+    });
+  });
+
+  describe("Changes name and description", () => {
+    test("should change name", () => {
+      const category = Category.create({
+        name: "Movie",
+      });
+
+      category.changeName("Movie2");
+      expect(category.name).toEqual("Movie2");
+    });
+
+    test("should change description", () => {
+      const category = Category.create({
+        name: "Movie",
+        description: "Movie description",
+      });
+
+      category.changeDescription("Movie description2");
+      expect(category.description).toEqual("Movie description2");
+    });
+  });
+
+  describe("Activate and Deactivate", () => {
+    test("should activate a category", () => {
+      const category = Category.create({
+        name: "Movie",
+        is_active: false,
+      });
+
+      category.activate();
+      expect(category.is_active).toBeTruthy();
+    });
+
+    test("should disable a category", () => {
+      const category = Category.create({
+        name: "Movie",
+      });
+
+      category.deactivate();
+      expect(category.is_active).toBeFalsy();
+    });
+  });
 });
