@@ -1,7 +1,7 @@
 import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
 
-describe("Category Unit Tests", () => {
+describe("Category Unit Tests:", () => {
   let validateSpy: any;
   beforeEach(() => {
     validateSpy = jest.spyOn(Category, "validate");
@@ -153,6 +153,69 @@ describe("Category Unit Tests", () => {
       if (category_id instanceof Uuid) {
         expect(category.category_id).toBe(category_id);
       }
+    });
+  });
+});
+
+describe("Category Validator:", () => {
+  describe("Create Command", () => {
+    test("should an invalid category with name property", () => {
+      expect(() => Category.create({ name: null })).containsErrorMessage({
+        name: [
+          "name should not be empty",
+          "name must be a string",
+          "name must be shorter than or equal to 255 characters",
+        ],
+      });
+
+      expect(() => Category.create({ name: "" })).containsErrorMessage({
+        name: ["name should not be empty"],
+      });
+
+      expect(() => Category.create({ name: 5 as any })).containsErrorMessage({
+        name: [
+          "name must be a string",
+          "name must be shorter than or equal to 255 characters",
+        ],
+      });
+
+      expect(() =>
+        Category.create({ name: "t".repeat(256) })
+      ).containsErrorMessage({
+        name: ["name must be shorter than or equal to 255 characters"],
+      });
+    });
+
+    test("should an invalid category with description property", () => {
+      expect(() =>
+        Category.create({ name: "Movie", description: null })
+      ).containsErrorMessage({
+        description: [
+          "description should not be empty",
+          "description must be a string",
+          "description must be shorter than or equal to 255 characters",
+        ],
+      });
+
+      expect(() =>
+        Category.create({ name: "Movie", description: "" })
+      ).containsErrorMessage({
+        description: ["description should not be empty"],
+      });
+
+      expect(() =>
+        Category.create({ name: "Movie", description: 5 as any })
+      ).containsErrorMessage({
+        description: ["description must be a string"],
+      });
+    });
+
+    test("should an invalid category using is_active property", () => {
+      expect(() =>
+        Category.create({ name: "Movie", is_active: 5 as any })
+      ).containsErrorMessage({
+        is_active: ["is_active must be a boolean value"],
+      });
     });
   });
 });
