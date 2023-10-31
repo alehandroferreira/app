@@ -1,7 +1,11 @@
-import { Uuid } from "../../shared/domain/value-objects/uuid.vo";
+import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
 
 describe("Category Unit Tests", () => {
+  let validateSpy: any;
+  beforeEach(() => {
+    validateSpy = jest.spyOn(Category, "validate");
+  });
   describe("Constructor", () => {
     test("should create a category with default values", () => {
       const category = new Category({
@@ -56,6 +60,7 @@ describe("Category Unit Tests", () => {
       expect(category.description).toBeNull();
       expect(category.is_active).toBeTruthy();
       expect(category.created_at).toBeInstanceOf(Date);
+      expect(validateSpy).toBeCalledTimes(1);
     });
 
     test("should create a category with description", () => {
@@ -69,6 +74,8 @@ describe("Category Unit Tests", () => {
       expect(category.description).toEqual("Movie description");
       expect(category.is_active).toBeTruthy();
       expect(category.created_at).toBeInstanceOf(Date);
+      expect(validateSpy).toBeCalledTimes(1);
+      expect(validateSpy).toBeCalledTimes(1);
     });
 
     test("should create a category with is_active", () => {
@@ -82,6 +89,7 @@ describe("Category Unit Tests", () => {
       expect(category.description).toBeNull();
       expect(category.is_active).toBeFalsy();
       expect(category.created_at).toBeInstanceOf(Date);
+      expect(validateSpy).toBeCalledTimes(1);
     });
   });
 
@@ -93,6 +101,7 @@ describe("Category Unit Tests", () => {
 
       category.changeName("Movie2");
       expect(category.name).toEqual("Movie2");
+      expect(validateSpy).toBeCalledTimes(2);
     });
 
     test("should change description", () => {
@@ -103,6 +112,7 @@ describe("Category Unit Tests", () => {
 
       category.changeDescription("Movie description2");
       expect(category.description).toEqual("Movie description2");
+      expect(validateSpy).toBeCalledTimes(2);
     });
   });
 
